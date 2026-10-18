@@ -1,4 +1,4 @@
-name: Build Pixel Launcher Debug APK
+name: Build Pixel Community Debug APK
 on:
   workflow_dispatch:
   push:
@@ -37,6 +37,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Pixel-Launcher-Debug
+          name: Pixel-Community-Debug
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error

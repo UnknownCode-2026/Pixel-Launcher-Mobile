@@ -30,6 +30,7 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 import th.samp.launcher.App;
+import th.samp.launcher.BuildConfig;
 import th.samp.launcher.Config;
 import th.samp.launcher.R;
 import th.samp.launcher.Utils;
@@ -91,7 +92,12 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.ViewHolder
         viewHolder.serverID.setText("0"+serverList.get(i).getID());
         viewHolder.btnPlay.setOnClickListener(view -> {
             view.startAnimation(AnimationUtils.loadAnimation(monitoringFragment.getContext(), R.anim.button_click));
-            if(!Utils.isGameInstalled()) { return; }
+            if (!Utils.isGameInstalled()) {
+                Toasty.info(monitoringFragment.requireContext(),
+                        BuildConfig.DEBUG ? "โหมดทดสอบ Launcher: ยังไม่มีไฟล์เกม กรุณารอการอัปเดต" : "ยังไม่ได้ติดตั้งไฟล์เกม",
+                        Toasty.LENGTH_LONG).show();
+                return;
+            }
             File gameFiles = new File(GAME_PATH + "data/ver.ini");
             Integer TARGET_GAMEFILES_VERSION = 0;
             if (gameFiles.exists()) {

@@ -64,7 +64,7 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
     {
         FileDownloader.setup(this);
         if (!Preferences.getBoolean(this, Preferences.FIRST_START)) {
-            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!BuildConfig.DEBUG) FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
                     Utils.writeLog(SplashActivity.this, 'e', "FCM Reg failed: "+task.getException());
                     return;

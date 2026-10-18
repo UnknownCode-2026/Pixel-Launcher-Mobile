@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import es.dmoral.toasty.Toasty;
 import th.samp.launcher.App;
+import th.samp.launcher.BuildConfig;
 import th.samp.launcher.R;
 import th.samp.launcher.Utils;
 import th.samp.launcher.launcher.Preferences;
@@ -41,7 +42,7 @@ public class StartActivity extends AppCompatActivity
                 } else {
                     Preferences.putString(this, Preferences.NICKNAME, obj);
                     Toasty.success(this, "บันทึกชื่อเล่นของคุณแล้ว: "+obj).show();
-                    startActivity(new Intent(StartActivity.this, DownloadActivity.class));
+                    startActivity(new Intent(StartActivity.this, BuildConfig.DEBUG ? MainActivity.class : DownloadActivity.class));
                     finish();
                 }
             }
@@ -58,7 +59,10 @@ public class StartActivity extends AppCompatActivity
             } else {
                 Preferences.putString(StartActivity.this, Preferences.NICKNAME, obj);
                 Toasty.success(StartActivity.this, "บันทึกชื่อเล่นของคุณแล้ว: "+obj).show();
-                if(!Utils.isGameInstalled()) {
+                if(BuildConfig.DEBUG) {
+                    startActivity(new Intent(StartActivity.this, MainActivity.class));
+                    finish();
+                } else if(!Utils.isGameInstalled()) {
                     App.getInstance().downloadID = App.INSTALL_TYPE_GAMEFILES;
                     startActivity(new Intent(StartActivity.this, DownloadActivity.class));
                     finish();

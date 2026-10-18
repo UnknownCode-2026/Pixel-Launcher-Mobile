@@ -21,6 +21,7 @@ import java.io.File;
 
 import es.dmoral.toasty.Toasty;
 import th.samp.launcher.App;
+import th.samp.launcher.BuildConfig;
 import th.samp.launcher.R;
 import th.samp.launcher.Utils;
 import th.samp.launcher.launcher.fragments.NewsFragment;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         handler = new Handler();
-        if(!Utils.isGameInstalled())
+        if(!BuildConfig.DEBUG && !Utils.isGameInstalled())
         {
             App.getInstance().downloadID = App.INSTALL_TYPE_GAMEFILES;
             startActivity(new Intent(MainActivity.this, DownloadActivity.class));

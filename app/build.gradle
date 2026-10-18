@@ -4,7 +4,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 //apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     compileOptions {

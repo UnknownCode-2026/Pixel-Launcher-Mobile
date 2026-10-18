@@ -27,7 +27,7 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <string name="app_name">LAUNCHER MOBILE</string>
+    <string name="app_name">Pixel Community</string>
     <string name="enterNik">ใส่ชื่อเล่น</string>
     <string name="minLengthNik">ชื่อเล่นต้องมีความยาวอย่างน้อย 4 ตัวอักษร</string>
     <string name="mustContains_">ชื่อเล่นต้องมีสัญลักษณ์ \"_\"</string>

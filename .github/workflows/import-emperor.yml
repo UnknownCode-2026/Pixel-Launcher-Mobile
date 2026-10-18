@@ -1,0 +1,57 @@
+name: Import EMPEROR launcher source
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download and safely extract source archive
+        env:
+          MEDIAFIRE_PAGE: https://www.mediafire.com/file/3wuyt249mov47qx/launchermobile1.5K%25E0%25B9%2581%25E0%25B8%2588%25E0%25B8%2581%25E0%25B9%2582%25E0%25B8%2594%25E0%25B8%25A2EMPEROR.zip/file
+        run: |
+          python3 - <<'PY'
+          import os,re,html,urllib.request,zipfile,pathlib,shutil
+          page=os.environ['MEDIAFIRE_PAGE']
+          req=urllib.request.Request(page,headers={'User-Agent':'Mozilla/5.0'})
+          data=urllib.request.urlopen(req,timeout=40).read().decode('utf-8','replace')
+          match=re.search(r'<a[^>]*id=["\']downloadButton["\'][^>]*href=["\']([^"\']+)',data)
+          if not match:
+              match=re.search(r'href=["\'](https://download[^"\']+\.mediafire\.com/[^"\']+)',data)
+          if not match: raise SystemExit('MediaFire direct link not found; page may require browser verification.')
+          url=html.unescape(match.group(1))
+          print('Downloading archive on GitHub runner...')
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=120) as src,open('/tmp/launcher.zip','wb') as dst:
+              shutil.copyfileobj(src,dst)
+          dest=pathlib.Path('imported_source')
+          dest.mkdir(exist_ok=True)
+          excluded={'.git','.github','node_modules','build','.gradle','.idea','__pycache__'}
+          total=0; count=0; skipped=[]
+          with zipfile.ZipFile('/tmp/launcher.zip') as z:
+              for item in z.infolist():
+                  p=pathlib.PurePosixPath(item.filename.replace('\\','/'))
+                  if item.is_dir() or p.is_absolute() or '..' in p.parts or any(x in excluded for x in p.parts): continue
+                  if item.file_size>50*1024*1024 or item.file_size<0: skipped.append(item.filename);continue
+                  if item.external_attr>>16 & 0o170000 == 0o120000: continue
+                  if p.name.lower() in {'.env','google-services.json','keystore.properties'} or p.suffix.lower() in {'.jks','.keystore','.apk','.aab','.obb'}: skipped.append(item.filename);continue
+                  total+=item.file_size
+                  if total>1500*1024*1024 or count>20000: raise SystemExit('Archive exceeds safety limits')
+                  target=dest.joinpath(*p.parts)
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  with z.open(item) as src,open(target,'wb') as dst: shutil.copyfileobj(src,dst)
+                  count+=1
+          print('Extracted',count,'files;',len(skipped),'excluded')
+          pathlib.Path('IMPORT_REPORT.md').write_text('# Import report\n\nImported files: '+str(count)+'\n\nExcluded entries:\n'+ '\n'.join('- '+x for x in skipped[:300])+'\n')
+          PY
+      - name: Commit imported files to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add imported_source IMPORT_REPORT.md
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Import EMPEROR launcher source archive"; git push origin HEAD:main; fi

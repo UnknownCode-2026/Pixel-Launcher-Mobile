@@ -1,0 +1,14 @@
+{
+    "clientVersionCode": 58,
+    "clientSampVersionCode": 11,
+    "gameFilesVersionCode": 10,
+    "URL_GAME_FILES" : "http://45.130.141.128/game.rar",
+    "URL_GAME_FILES_UPD" : "http://45.130.141.128/files_upd.rar",
+    "URL_VK": "https://vk.com/",
+    "URL_DISCORD": "https://discord.gg/",
+    "URL_YOUTUBE": "",
+    "URL_FORUM": "",
+    "URL_DONATE": "",
+    "URL_CLIENT": "http://45.130.141.128/launcher.apk",
+    "URL_CLIENTSAMPAPK": "http://45.130.141.128/client.apk"
+}

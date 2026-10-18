@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat android:layout_gravity="center" android:orientation="vertical" android:id="@id/settings_root_layout" android:background="#e6212121" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginTop="10.0dip" android:layout_marginRight="10.0dip" android:layout_marginBottom="10.0dip" android:weightSum="1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0">
+        <androidx.appcompat.widget.LinearLayoutCompat android:layout_gravity="start" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:layout_marginTop="15.0dip" android:layout_marginRight="5.0dip" android:layout_marginBottom="15.0dip" android:weightSum="1.0">
+                <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="0.5">
+                    <androidx.appcompat.widget.SwitchCompat android:textSize="12.0sp" android:textColor="@android:color/white" android:layout_gravity="end" android:id="@id/switch_cutout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="10.0dip" android:text="หน้าจอไร้ขอบ" android:fontFamily="@font/proximanova_regular" />
+                    <androidx.appcompat.widget.SwitchCompat android:textSize="12.0sp" android:textColor="@android:color/white" android:layout_gravity="end" android:id="@id/switch_android_keyboard" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="10.0dip" android:text="Android Keyboard" android:fontFamily="@font/proximanova_regular" />
+                    <androidx.appcompat.widget.SwitchCompat android:textSize="12.0sp" android:textColor="@android:color/white" android:layout_gravity="end" android:id="@id/switch_fps_counter" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="10.0dip" android:text="เปิด FPS" android:fontFamily="@font/proximanova_regular" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

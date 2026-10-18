@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+// Firebase configuration is optional for launcher-only debug builds.
+// Supply app/google-services.json to enable Google Services in a configured build.
+if (file('google-services.json').exists()) {
+    apply plugin: 'com.google.gms.google-services'
+}
 apply plugin: 'com.google.firebase.crashlytics'
 //apply plugin: 'me.tatarka.retrolambda'
 

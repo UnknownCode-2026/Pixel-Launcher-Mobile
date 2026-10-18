@@ -68,7 +68,7 @@ dependencies {
     implementation 'com.github.ceryle:RadioRealButton:v2.1.1'
     implementation 'com.akexorcist:round-corner-progress-bar:2.1.2'
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
-    implementation 'ru.egslava:MaskedEditText:1.0.5'
+    implementation 'io.github.softmedtanzania:maskededittext:1.0.5'
     implementation 'com.github.Triggertrap:SeekArc:v1.1'
     implementation "com.github.skydoves:colorpickerpreference:2.0.4"
     implementation 'com.github.smarteist:Android-Image-Slider:1.4.0'
@@ -79,7 +79,7 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:5.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
     implementation 'org.solovyev.android:checkout:1.2.1'
-    implementation 'ru.egslava:MaskedEditText:1.0.5'
+    implementation 'io.github.softmedtanzania:maskededittext:1.0.5'
     implementation 'com.github.Triggertrap:SeekArc:v1.1'
     implementation "com.github.skydoves:colorpickerpreference:2.0.4"
     implementation 'commons-io:commons-io:2.6'

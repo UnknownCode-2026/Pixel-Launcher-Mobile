@@ -4,10 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - 'launcher-api/pixel_logo.png'
+      - 'launcher-api/Messenger_creation_133AACBE-0E96-41CE-8885-40C9F4AB7230.png'
       - '.github/workflows/apply-pixel-branding.yml'
 permissions:
   contents: write
+  actions: write
 jobs:
   branding:
     runs-on: ubuntu-latest
@@ -16,49 +17,54 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Create launcher logo and Android icon assets
+      - name: Remove logo background and generate all launcher icons
         run: |
-          python -m pip install --quiet Pillow
+          python -m pip install --quiet Pillow "rembg[cpu]"
           python - <<'PY'
-          from PIL import Image, ImageOps
           from pathlib import Path
+          from PIL import Image
+          from rembg import remove, new_session
+          original = Path('launcher-api/Messenger_creation_133AACBE-0E96-41CE-8885-40C9F4AB7230.png')
+          if not original.is_file():
+              raise FileNotFoundError(original)
+          source = remove(Image.open(original).convert('RGBA'), session=new_session('u2net'))
+          bounds = source.getchannel('A').getbbox()
+          if bounds is None:
+              raise ValueError('Background removal produced an empty logo')
+          source = source.crop(bounds)
           logo = Path('launcher-api/pixel_logo.png')
-          if not logo.is_file():
-              raise FileNotFoundError(f'Missing logo: {logo}')
-          with Image.open(logo) as im:
-              source = im.convert('RGBA')
-          # Main in-app logo: preserve complete artwork and original proportions.
-          out = Path('app/src/main/res/drawable/logo_head.png')
-          out.parent.mkdir(parents=True, exist_ok=True)
+          source.save(logo, 'PNG')
+          head = Path('app/src/main/res/drawable/logo_head.png')
           art = source.copy()
-          art.thumbnail((960, 480), Image.Resampling.LANCZOS)
-          art.save(out, 'PNG')
-          # Adaptive icon layers and legacy icons for every Android density.
-          densities = {'mdpi':48, 'hdpi':72, 'xhdpi':96, 'xxhdpi':144, 'xxxhdpi':192}
+          art.thumbnail((960,480),Image.Resampling.LANCZOS)
+          art.save(head,'PNG')
+          densities = {'mdpi':48,'hdpi':72,'xhdpi':96,'xxhdpi':144,'xxxhdpi':192}
           for density, px in densities.items():
               folder = Path(f'app/src/main/res/mipmap-{density}')
-              folder.mkdir(parents=True, exist_ok=True)
+              folder.mkdir(parents=True,exist_ok=True)
               for name, size, ratio in [
                   ('ic_launcher.png',px,.84),
                   ('ic_launcher_round.png',px,.84),
-                  ('ic_launcher_foreground.png',int(px*108/48),.56),
-                  ('ic_launcher_background.png',int(px*108/48),0),
+                  ('ic_launcher_foreground.png',round(px*108/48),.56),
+                  ('ic_launcher_background.png',round(px*108/48),0)
               ]:
+                  canvas = Image.new('RGBA',(size,size),(255,255,255,255))
                   if ratio:
-                      canvas = Image.new('RGBA',(size,size),'#FFFFFF')
-                      fitted = source.copy()
+                      fitted=source.copy()
                       fitted.thumbnail((int(size*ratio),int(size*ratio)),Image.Resampling.LANCZOS)
                       canvas.alpha_composite(fitted,((size-fitted.width)//2,(size-fitted.height)//2))
-                  else:
-                      canvas = Image.new('RGBA',(size,size),'#FFFFFF')
                   canvas.save(folder/name,'PNG')
           PY
-      - name: Commit generated branding assets
+      - name: Commit new logo and generated icons
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main/res/drawable/logo_head.png app/src/main/res/mipmap-*/
+          git add launcher-api/pixel_logo.png app/src/main/res/drawable/logo_head.png app/src/main/res/mipmap-*/
           if ! git diff --cached --quiet; then
-            git commit -m "Apply Pixel Community logo to launcher and Android icons"
+            git commit -m "Replace Pixel Community logo with transparent new artwork"
             git push
           fi
+      - name: Build APK with new branding
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run build-debug.yml --ref main

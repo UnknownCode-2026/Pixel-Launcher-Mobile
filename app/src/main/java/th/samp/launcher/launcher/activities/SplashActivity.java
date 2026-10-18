@@ -179,7 +179,7 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
     //-------------------------------------------------------------------
 
     private void startLauncher() {
-        if(/*!BuildConfig.DEBUG && */App.getInstance().targetClientVersion != BuildConfig.VERSION_CODE) {
+        if(!BuildConfig.DEBUG && App.getInstance().targetClientVersion != BuildConfig.VERSION_CODE) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragmentContainer, new UpdateClient());
             transaction.commit();
